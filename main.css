@@ -1,0 +1,25 @@
+
+
+
+.page-text {
+	font-size: 40pt;
+}
+
+.day-container {
+	font-size: 30pt;
+}
+
+#main-container {
+	position: relative;
+	top: 100px;
+}
+
+header {
+	height: 100px;
+	width: 100%;
+	position: fixed;
+	z-index: 3;
+	background-color: red;
+	font-size: 20pt;
+	text-align: left;
+}
