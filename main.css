@@ -5,6 +5,17 @@
 	font-size: 40pt;
 }
 
+.slide-left {
+	width: 1000px;
+	position: fixed;
+	background-color: green;
+	height: 700px;
+	top: 140px;
+	transition-property: left;
+	left: -900px;
+	z-index: 3;
+}
+
 .total-days {
 	height: 50px;
 	width: 150px;
@@ -13,15 +24,30 @@
 	font-size: 12pt;
 	position: relative;
 	float: right;
-	right: 28px
+	right: 42px
+}
+
+.show-calendar {
+	height: 50px;
+	width: 150px;
+	background-color: #00FFFF;
+	display: inline-block;
+	font-size: 12pt;
+	position: relative;
+	float: right;
+	right: 28px;
 }
 
 .day-container {
 	position: relative;
+	display: block;
 	font-size: 30pt;
-	height: 300px;
-	width: 80%;
-	margin: 0 auto;
+	height: 380px;
+	width: 800px;
+	left: 110px;
+	float: left;
+
+	/*margin: 0 auto;*/
 	background-color: skyblue;
 	padding: 10px;
 	border: 6px solid #FF0099;
@@ -37,6 +63,12 @@
 	border-radius: 24px;
 	float: right;
 	display: none;
+}
+
+.appointment-form {
+	display: inline-block;
+	padding: 2px;
+	font-size: 14pt;
 }
 
 .button-container {

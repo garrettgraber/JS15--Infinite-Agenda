@@ -1,4 +1,6 @@
 
+localStorage.wanderingdiv = true;
+
 var dayCurrent = {'day': 2, 'month': 'July', 'year': 2014};
 var totalValuesObj = {};
 var monthNumberOfDaysDict = { 'June': 30, 'April': 30, 'September': 30, 
@@ -17,6 +19,17 @@ var createDayKey = function(dayObj) {
 	var yearString = year.toString();
 	var outputString = monthNumberString + '-' + dayString + '-' + yearString;
 	return outputString;
+};
+
+var turnObjStringLocalStorage = function(inObj) {
+	var objectString = JSON.stringify(inObj);
+	localStorage.totalvalues = objectString;
+	return objectString;
+};
+
+var turnLocalStorageStringObj = function() {
+	var objectString = localStorage.totalvalues;
+	return $.parseJSON(objectString);
 };
 
 var getTotalNumberDays = function() {
@@ -89,7 +102,7 @@ var dayToHtml = function(dayObj) {
 	var tempHtml = '<div class="day-container">' + tempString + '<button class="appointment-add">Add Appointment' +'</div>';
 	*/
 	
-	var tempHtml = '<div class="day-container"><div class="date-button-container">' + tempString + '<div class="button-container"><button class="appointment-add">Add Appointment' + '</div>' + '</div>' + '</div>';
+	var tempHtml = '<div class="day-container"><div class="date-button-container">' + tempString + '<div class="button-container"><button class="appointment-add">Add Appointment</button>' + '</div>' + '</div>' + '</div>';
 	
 
 	return tempHtml;
@@ -103,6 +116,7 @@ var createDayContainer = function(dateInObj) {
 	var dayKey = createDayKey(dateInObj);
 	var copyDateInObj = $.extend(true, {}, dateInObj);
 	totalValuesObj[dayKey] = copyDateInObj;
+	var resultString = turnObjStringLocalStorage(totalValuesObj);
 };
 
 var addHtmlToPage = function(htmlIn) {
@@ -115,6 +129,39 @@ var createNewDayAndStore = function(dayObject) {
 	return getNextDay(dayObject);
 };
 
+var sideDivMove = function() {
+
+	console.log('button has fired');
+	console.log($(this));
+	var windowBool = localStorage.wanderingdiv;
+	windowBool = (windowBool === "true");
+	
+	console.log("localStorage.wanderingdiv: " + localStorage.wanderingdiv);
+	console.log("tempBool: " + windowBool);
+	/*
+	$(this).find('.rel').css('left', '0px');
+	
+	$('#fun').css('left', '0px');
+	*/
+	
+	if (windowBool) {
+		//$('#fun').animate({left: '0px'}, 'slow');
+
+		$('.slide-left').animate({left: '0'}, 'slow');
+		$('.show-calendar').text('Hide Calendar');
+	}
+	else {
+		//$('#fun').animate({left: '-210px'}, 'slow');
+		$('.slide-left').animate({left: '-900px'}, 'slow');
+		$('.show-calendar').text('Show Calendar');
+	}
+	var tempBool = !(windowBool);
+	localStorage.wanderingdiv = tempBool;
+	console.log("localStorage.wanderingdiv: " + localStorage.wanderingdiv);
+	console.log("tempBool: " + tempBool);
+	
+};
+
 
 $(document).on('ready', function() {
 
@@ -122,6 +169,18 @@ $(document).on('ready', function() {
 
 	var addHtml = '<div class="page-text">Adding text</div>';
 	var insertHtmlObject = $(addHtml);
+
+	$('.show-calendar').click(function() {	
+		sideDivMove();
+	});
+
+	// $('.slide-left').mouseenter(function() {
+	// 	sideDivMove();
+	// });
+
+	// $('.slide-left').mouseleave(function() {
+	// 	sideDivMove();
+	// });
 
 	$('.total-days').click( function () { alert( getTotalNumberDays() ) } );
 
@@ -212,6 +271,9 @@ $(document).on('ready', function() {
 		var tempContainer = $(this).closest('.day-container');
 		console.log(tempContainer.attr('class'));
 		console.log(tempContainer);
+		tempForm = $('<form class="appointment-form"></form>');
+		tempForm.append($('<input class="form-input" size="30">'));
+		tempContainer.append(tempForm);
 
 	});
 
@@ -220,7 +282,7 @@ $(document).on('ready', function() {
 
 // Create the first week of days
 
-for(var i=0; i < 8; i++) {
+for(var i=0; i < 7; i++) {
 
 	dayCurrent = createNewDayAndStore(dayCurrent);
 
