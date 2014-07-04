@@ -12,8 +12,10 @@
 	height: 700px;
 	top: 140px;
 	transition-property: left;
-	left: -900px;
+	left: -920px;
 	z-index: 3;
+	font-size: 30pt;
+	padding: 10px;
 }
 
 .total-days {
@@ -68,6 +70,13 @@
 .appointment-form {
 	display: inline-block;
 	padding: 2px;
+	font-size: 14pt;
+}
+
+.appointment-entry {
+	margin: 0;
+	display: inline;
+	padding: 10px;
 	font-size: 14pt;
 }
 

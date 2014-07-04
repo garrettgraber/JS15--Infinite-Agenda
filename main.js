@@ -1,7 +1,7 @@
 
 localStorage.wanderingdiv = true;
 
-var dayCurrent = {'day': 2, 'month': 'July', 'year': 2014};
+var dayCurrent = {'day': 2, 'month': 'July', 'year': 2014, 'appointments': [] };
 var totalValuesObj = {};
 var monthNumberOfDaysDict = { 'June': 30, 'April': 30, 'September': 30, 
 	'November': 30, 'January': 31, 'March': 31, 'May': 31, 'July': 31, 
@@ -19,6 +19,22 @@ var createDayKey = function(dayObj) {
 	var yearString = year.toString();
 	var outputString = monthNumberString + '-' + dayString + '-' + yearString;
 	return outputString;
+};
+
+var turnDateStringToObj = function(inString) {
+
+	var dayObj = {}
+	var dateArray = inString.split(' ');
+	var month = dateArray[ 0 ];
+	var year = dateArray[ 2 ];
+	var dayTemp = dateArray[ 1 ];
+	var day = dayTemp.slice(0, dayTemp.length - 1);
+
+	dayObj.day = day;
+	dayObj.month = month;
+	dayObj.year = year;
+
+	return dayObj;
 };
 
 var turnObjStringLocalStorage = function(inObj) {
@@ -152,7 +168,7 @@ var sideDivMove = function() {
 	}
 	else {
 		//$('#fun').animate({left: '-210px'}, 'slow');
-		$('.slide-left').animate({left: '-900px'}, 'slow');
+		$('.slide-left').animate({left: '-920px'}, 'slow');
 		$('.show-calendar').text('Show Calendar');
 	}
 	var tempBool = !(windowBool);
@@ -169,6 +185,14 @@ $(document).on('ready', function() {
 
 	var addHtml = '<div class="page-text">Adding text</div>';
 	var insertHtmlObject = $(addHtml);
+
+	$(function() {
+    	$("form").submit(function() { return false; });
+	});
+
+	$(document).on('click', '.appointment-entry', function () {
+		$(this).remove();
+	});
 
 	$('.show-calendar').click(function() {	
 		sideDivMove();
@@ -271,10 +295,37 @@ $(document).on('ready', function() {
 		var tempContainer = $(this).closest('.day-container');
 		console.log(tempContainer.attr('class'));
 		console.log(tempContainer);
-		tempForm = $('<form class="appointment-form"></form>');
+		tempForm = $('<form class="appointment-form" onsubmit="function() {return false}"></form>');
 		tempForm.append($('<input class="form-input" size="30">'));
 		tempContainer.append(tempForm);
 
+	});
+
+	$(document).keypress('.form-input', function(event) {
+
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (keycode == '13') {
+			event.preventDefault();
+			var currentElement = $(document.activeElement);
+			var inputValue = currentElement.val();
+			var dayContainer = currentElement.closest('.day-container');
+			var buttonContainer = dayContainer.find('.date-button-container');
+			var dateStringTotal = buttonContainer.text();
+			var parentElement = currentElement.parent();
+			var dateEnd = dateStringTotal.indexOf('Add');
+			var dateString = dateStringTotal.slice(0, dateEnd);
+			var dayObj = turnDateStringToObj(dateString);
+			var dayKey = createDayKey(dayObj);
+			var dayObj = totalValuesObj[ dayKey ];
+			var dayObjArray = dayObj.appointments;
+			dayObjArray.push( inputValue );
+			dayObj.appointments = dayObjArray;
+			totalValuesObj[ dayKey ] =  dayObj;
+			var jsonStorageString = turnObjStringLocalStorage( totalValuesObj );			
+			var dayContainer = parentElement.parent();
+			parentElement.remove();
+			dayContainer.append('<p class="appointment-entry">' + inputValue + '</p>');
+		}
 	});
 
 });
